@@ -1,0 +1,13 @@
+import './imgPokemon.css'
+
+const ImgPokemon: React.FC<{ image: string }> = ({
+                                                     image
+                                                 }) => {
+    return (
+        <div className="pokemon-img">
+            <img src={image} alt="" />
+        </div>
+    )
+}
+
+export default ImgPokemon;

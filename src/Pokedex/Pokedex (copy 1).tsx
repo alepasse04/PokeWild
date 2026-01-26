@@ -1,5 +1,5 @@
 // Pokedex.tsx
-import "../pokecord.css";
+import "./pokecord.css";
 
 export default function Pokedex() {
     return(
@@ -53,7 +53,7 @@ export default function Pokedex() {
                 </div>
                 <section className="decoration">
                     <div className="buttons">
-                        <a data-home="Home" href="/"><i className="ti ti-home-2"></i></a>
+                        <a data-home="Home" href="/public"><i className="ti ti-home-2"></i></a>
                         <a data-calculator="Calculator" href="javascript:void(0)"><i
                             className="ti ti-calculator"></i></a>
                         <a data-logout="Logout" href="javascript:void(0)" className="logout disableLogout"><i
@@ -84,8 +84,8 @@ export default function Pokedex() {
                 </nav>
             </footer>
             <noscript>Please Enable Javascript To Use The Pokedex!</noscript>
-            <script src="./utilities/jquery-3.6.3.min.js"></script>
-            <script src="./js/index.js"></script>
+            <script src="utilities/jquery-3.6.3.min.js"></script>
+            <script src="js/index.js"></script>
         </>
     )
         ;

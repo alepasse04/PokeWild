@@ -1,10 +1,9 @@
 // Pokedex.tsx
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import type {Ability, Pokemon, PokemonType} from "../types/types.ts";
 import PokedexScreen from "./PokedexScreen/PokedexScreen.tsx";
 
 import "./pokecord.css";
-import './tabler-icons.min.css'
 
 function Pokedex() {
     const [showAnimation, setShowAnimation] = useState(true);
@@ -34,20 +33,16 @@ function Pokedex() {
                 const updatedPokemonList = await Promise.all(
                     pokemonList.map(async (pokemon) => {
                         const res = await fetch(pokemon.url);
-                        if(!res.ok){
-                            throw new Error(`Network response was not ok for ${pokemon.name}`);
+                        if(!response.ok){
+                            throw new Error(`Network response was not ok for${pokemon.name}`);
                         }
                         const pokemonData = await res.json();
-
                         const types = pokemonData.types.map(({ type }: PokemonType) => type.name);
-
                         const abilities = pokemonData.abilities.map(({ ability }: Ability) => ability.name);
+
                         const { sprites } = pokemonData;
-                        const image = sprites.front_default;
-
-                        const id = pokemonData.id;
-
-                        return {...pokemon, id, types, abilities, image};
+                        const image = sprites.front_shiny;
+                        return {...pokemon, types, abilities, image};
 
                     })
                 );
@@ -86,59 +81,41 @@ function Pokedex() {
                 <div></div>
             </section>
 
-            <div className="container">
-                <section className="main">
-                    <div className="maintext">
-                        {
-                            showAnimation ? <div className="animation"></div> : <PokedexScreen pokemons={availablePokemons} />
-                        }
-                    </div>
-                    <section className="decoration">
-                        <div className="buttons">
-                            <a data-home="Home" href="/public"><i className="ti ti-home-2"></i></a>
-                            <a data-calculator="Calculator" href="javascript:void(0)"><i
-                                className="ti ti-calculator"></i></a>
-                            <a data-logout="Logout" href="javascript:void(0)" className="logout disableLogout"><i
-                                className="ti ti-power"></i></a>
-                        </div>
-                        <div className="vents">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </section>
-                </section>
-                <div className="right-screen">
-                    <div className="screen">
-                        <p><strong className="time">{new Date().toDateString()}</strong><br/><span className="goto"></span></p>
-                    </div>
-                    <div className="screen-buttons">
-                        <button></button>
-                        <button></button>
-                    </div>
+            <section className="main">
+                <div className="maintext">
+                    {showAnimation ? <div className="animation"></div> : <PokedexScreen pokemons={availablePokemons} />}
                 </div>
-
-            </div>
-
-
-
+                <section className="decoration">
+                    <div className="buttons">
+                        <a data-home="Home" href="/public"><i className="ti ti-home-2"></i></a>
+                        <a data-calculator="Calculator" href="javascript:void(0)"><i
+                            className="ti ti-calculator"></i></a>
+                        <a data-logout="Logout" href="javascript:void(0)" className="logout disableLogout"><i
+                            className="ti ti-power"></i></a>
+                    </div>
+                    <div className="vents">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </section>
+            </section>
 
             <footer>
+                <div className="screen">
+                    <p><strong className="time">Thu Jan 22 2026</strong><br/><span className="goto"></span></p>
+                </div>
                 <nav>
                     <div>
-                        <a data-add="Add" href="" target="_blank"><i className="ti ti-minus"></i></a>
-                        <a data-terms="Terms" href=""><i className="ti ti-minus"></i></a>
+                        <a data-add="Add" href="/add" target="_blank"><i className="ti ti-plus"></i></a>
+                        <a data-terms="Terms" href="javascript:void(0)"><i className="ti ti-notes"></i></a>
                     </div>
                     <div>
-                        <a data-shop="Shop" href=""><i className="ti ti-minus-vertical"></i></a>
-                        <a data-guide="Guide" href=""><i className="ti ti-minus-vertical"></i></a>
+                        <a data-shop="Shop" href="javascript:void(0)"><i className="ti ti-shopping-cart"></i></a>
+                        <a data-guide="Guide" href="https://guide.pokecord.org"><i className="ti ti-code"></i></a>
                     </div>
                 </nav>
-                <div className="footer-buttons">
-                    <button>A</button>
-                    <button>B</button>
-                </div>
             </footer>
             <noscript>Please Enable Javascript To Use The Pokedex!</noscript>
             <script src="utilities/jquery-3.6.3.min.js"></script>

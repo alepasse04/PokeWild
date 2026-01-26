@@ -1,12 +1,12 @@
 @font-face {
     font-family: 'pokemon-pixel';
-    src: url('./assets/fonts/PixelOperator8.ttf');
+    src: url('../assets/fonts/PixelOperator8.ttf');
     font-display: swap;
 }
 
 @font-face {
     font-family: 'pokemon-pixel-bold';
-    src: url('./assets/fonts/PixelOperator8-Bold.ttf');
+    src: url('../assets/fonts/PixelOperator8-Bold.ttf');
     font-display: swap;
 }
 
@@ -265,11 +265,53 @@ footer {
     bottom: 0;
     left:0;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     margin-bottom: 1.5svh;
+    margin-left: -10svw;
 }
 
+.footer-buttons {
+    display: flex;
+    flex-direction: row;
+    margin-left: 10svw;
+}
+.footer-buttons button {
+    border-radius: 100vw;
+    width: 4svh;
+    border: 0.4svh solid black;
+    font-size: 2.8svh;
+    background-color: var(--color-nav-control);
+    color: var(--color-cover-middle);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+.footer-buttons button:not(:first-child) {
+    margin-left: 2svw;
+
+}
+.right-screen {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5svw;
+    margin-top: 2svh;
+
+
+}
+.screen-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3svh;
+}
+.screen-buttons button {
+    width: 8svh;
+}
+.screen-buttons button:not(:first-child) {
+    margin-left: 2svw;
+}
 .screen {
     height: 6svh;
     aspect-ratio: 4.5;
@@ -366,12 +408,22 @@ nav div:first-child::before {
     z-index: 70;
 }
 
+
+.container {
+    display: flex;
+    flex-direction: row;
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    height: 100%;
+    width: 100%;
+}
 .main {
     width: 70svh;
     height: 60svh;
     border: 0.6svh solid black;
     border-radius: 2svh;
     margin-top: 2svh;
+    margin-left: 15svw;
     position: relative;
     display: flex;
     justify-content: center;
@@ -391,10 +443,11 @@ nav div:first-child::before {
     z-index: 1;
 }
 
-.maintext {
+.maintext {;
     height: 100%;
     width: 100%;
-    background-color: var(--color-screen);
+    /*background-color: var(--color-screen);*/
+    background-color: black;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -410,6 +463,35 @@ nav div:first-child::before {
     color: black;
     font-family: 'pokemon-pixel', monospace;
 }
+
+.animation {
+    margin-left: 38%;
+    margin-top: 25.5%;
+    width: 155px;
+    height: 125px;
+    background-image: url('../assets/sprites/startingAnimation/GBC-starting-animation.png');
+    /*background-size: 400% 2700%;*/
+    transform: scale(3);
+    background-position: -9px -9px;
+
+    /*-webkit-animation: playX 4s steps(4)infinite, playY 5s steps(27) infinite;*/
+
+    -webkit-animation: playX 0.266s steps(4)infinite, playY 7.2s steps(27) infinite;
+}
+
+
+@-webkit-keyframes playY {
+    0% { background-position-y: -15px; }
+    100% { background-position-y: 103.3%; }
+}
+
+@-webkit-keyframes playX {
+    0% { background-position-x: -9px; }
+    100% { background-position-x: 129.7%; }
+}
+
+
+
 .maintext strong {
     font-family: 'pokemon-pixel-bold', monospace;
 }
