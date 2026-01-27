@@ -1,13 +1,12 @@
-import { useState } from "react";
 import type {PokemonProps} from "../../types/types.ts";
 import PokemonName from "./PokeItems/PokemonName.tsx";
 import ImgPokemon from "./PokeItems/ImgPokemon.tsx";
 import "./pokedexScreen.css"
 
-const PokedexScreen: React.FC<PokemonProps> = ({
-    pokemons
+const PokedexScreen: React.FC<PokemonProps & { current: number; setCurrent: (index: number) => void }> = ({
+    pokemons,
+    current,
 }) => {
-    const [current, setCurrent] = useState(4); // Index of the current Pokemon
 
     const prev = pokemons[current - 1];
     const curr = pokemons[current];

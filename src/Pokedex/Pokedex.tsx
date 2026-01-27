@@ -9,27 +9,30 @@ import './tabler-icons.min.css'
 function Pokedex() {
     const [showAnimation, setShowAnimation] = useState(true);
     const [availablePokemons, setAvailablePokemons] = useState<Pokemon[]>([]);
+    const [current, setCurrent] = useState(4); // Index of the current Pokemon
     useEffect(() => {
         //fetch available pokemons
         const getAvailablePokeData = async () => {
             const apiUrl = 'https://pokeapi.co/api/v2';
-            const limit:number = 20;
-            const offset:number = 0;
-            const url: string = `${apiUrl}/pokemon?limit=${limit}&offset=${offset}`;
+            const batchSize = 100;
+            const totalPokemons = 721;
+            const batches = [];
+            for (let i = 0; i < totalPokemons; i += batchSize) {
+                const limit = Math.min(batchSize, totalPokemons - i);
+                const offset = i;
+                batches.push({ limit, offset });
+            }
             try {
-
-                const response = await fetch(url);
-                if (!response.ok) {
-                throw new Error('Network response was not ok');
-                }
-                const data= await response.json();
-
-                const pokemonList: {
-                    name: string;
-                    url: string;
-                    id: number;
-                    type: string[];
-                }[] = data.results;
+                const allResults = await Promise.all(batches.map(async ({ limit, offset }) => {
+                    const url = `${apiUrl}/pokemon?limit=${limit}&offset=${offset}`;
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    return data.results;
+                }));
+                const pokemonList = allResults.flat();
 
                 const updatedPokemonList = await Promise.all(
                     pokemonList.map(async (pokemon) => {
@@ -66,6 +69,20 @@ function Pokedex() {
         return () => clearTimeout(timer);
     }, []);
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setCurrent(prev => prev - 1 < 0 ? availablePokemons.length - 1 : prev - 1);
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setCurrent(prev => prev + 1 >= availablePokemons.length ? 0 : prev + 1);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [availablePokemons.length]);
+
     return(
         <>
             <div className="cover top"></div>
@@ -90,7 +107,7 @@ function Pokedex() {
                 <section className="main">
                     <div className="maintext">
                         {
-                            showAnimation ? <div className="animation"></div> : <PokedexScreen pokemons={availablePokemons} />
+                            showAnimation ? <div className="animation"></div> : <PokedexScreen pokemons={availablePokemons} current={current} setCurrent={setCurrent} />
                         }
                     </div>
                     <section className="decoration">
@@ -131,8 +148,8 @@ function Pokedex() {
                         <a data-terms="Terms" href=""><i className="ti ti-minus"></i></a>
                     </div>
                     <div>
-                        <a data-shop="Shop" href=""><i className="ti ti-minus-vertical"></i></a>
-                        <a data-guide="Guide" href=""><i className="ti ti-minus-vertical"></i></a>
+                        <a data-shop="Shop" href="" onClick={(e) => { e.preventDefault(); setCurrent(current - 1 < 0 ? availablePokemons.length - 1 : current - 1); }}><i className="ti ti-minus-vertical"></i></a>
+                        <a data-guide="Guide" href="" onClick={(e) => { e.preventDefault(); setCurrent(current + 1 >= availablePokemons.length ? 0 : current + 1); }}><i className="ti ti-minus-vertical"></i></a>
                     </div>
                 </nav>
                 <div className="footer-buttons">

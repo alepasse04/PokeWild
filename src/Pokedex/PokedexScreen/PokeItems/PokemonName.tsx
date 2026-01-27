@@ -4,6 +4,7 @@ import './pokemonName.css'
 const PokemonName: React.FC<{ id: number; name: string }> = ({
 id, name
 }) => {
+    if (id === 0) return <div></div>;
     return (
         <div className="pokemon-card">
                 <div className="image"></div>
