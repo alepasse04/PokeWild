@@ -7,6 +7,22 @@
 **Autore:** Alessandro Passerini  
 **Data:** Febbraio 2026
 
+## 🌐 Demo Live
+
+👉 **[Prova PokeWild su GitHub Pages](https://alepasse04.github.io/PokeWild/)** 👈
+
+---
+
+## 🙏 Ringraziamenti & Credits
+
+Questo progetto non sarebbe stato possibile senza:
+
+- **[PokéAPI](https://pokeapi.co/)** - L'incredibile API RESTful gratuita che fornisce tutti i dati dei Pokémon. Grazie per rendere accessibili queste informazioni agli sviluppatori!
+
+- **[No as a Service (NAAS)](https://github.com/hotheadhacker/no-as-a-service)** - API divertente per i messaggi casuali nella pagina 404. Un tocco di umorismo nel progetto!
+
+- **[Pokecord](https://pokecord.org/)** - Il sito che mi ha ispirato per il design dell'interfaccia del Pokédex. Grazie per l'ispirazione visiva!
+
 ---
 
 ## Descrizione del Progetto

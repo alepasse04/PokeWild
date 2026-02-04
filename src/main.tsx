@@ -25,10 +25,11 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename="/PokeWild/">
           <Routes>
-              <Route path="/PokeWild/pokedex/*" element={<Pokedex />} />
-              <Route path="/PokeWild/*" element={<PageNotFound />} />
+              <Route path="/" element={<Pokedex />} />
+              <Route path="/pokedex/*" element={<Pokedex />} />
+              <Route path="*" element={<PageNotFound />} />
           </Routes>
       </BrowserRouter>
     </QueryClientProvider>

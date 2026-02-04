@@ -151,7 +151,7 @@ function Pokedex() {
                                 : currentView === 'battle' && availablePokemons[current]
                                 ? <BattleScreen
                                     playerPokemon={availablePokemons[current]}
-                                    onBattleEnd={(_won) => {
+                                    onBattleEnd={() => {
                                         setCurrentView('screen');
                                         setSelectedMoveIndex(0);
                                     }}
@@ -164,7 +164,7 @@ function Pokedex() {
                     </div>
                     <section className="decoration">
                         <div className="buttons">
-                            <a onClick={() => navigate('/')}><i className="ti ti-error-404-off"></i></a>
+                            <a onClick={() => navigate('/404')}><i className="ti ti-error-404-off"></i></a>
                             <a onClick={() => setCurrentView('screen')}><i
                                 className="ti ti-home-2"></i></a>
                             <a onClick={() => setCurrentView('details')} className="search"><i

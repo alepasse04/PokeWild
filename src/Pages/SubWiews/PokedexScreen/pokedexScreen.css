@@ -1,5 +1,5 @@
 .pokedex {
-    background-image: url('/src/assets/Graphics/UI/Pokedex/bg_list_over.png');
+    background-image: url('../../../assets/Graphics/UI/Pokedex/bg_list_over.png');
     background-size: 100% 100%; /* Riempie tutto il contenitore */
     background-repeat: no-repeat;
     background-position: center;
@@ -11,7 +11,7 @@
 }
 
 .BG_pokeball {
-    background-image: url('/src/assets/Graphics/UI/Pokedex/pokeball.png'); /* Replace with the actual image path */
+    background-image: url('../../../assets/Graphics/UI/Pokedex/pokeball.png');
     background-size: cover; /* Optional: to cover the entire div */
     background-repeat: no-repeat; /* Optional: to prevent repetition */;
     margin-top: 14%;
@@ -24,7 +24,7 @@
 
 .BG_list {
     position: relative;
-    background-image: url('/src/assets/Graphics/UI/Pokedex/bg_list.png'); /* Replace with the actual image path */
+    background-image: url('../../../assets/Graphics/UI/Pokedex/bg_list.png');
     background-size: 250%; /* Optional: to cover the entire div */
     background-position: center;
     margin-left: 0.8%;
@@ -45,7 +45,7 @@
 
 .selector {
 
-    background-image: url('/src/assets/Graphics/UI/Pokedex/cursor_list.png');
+    background-image: url('../../../assets/Graphics/UI/Pokedex/cursor_list.png');
     background-size: cover; /* Optional: to cover the entire div */
     background-repeat: no-repeat; /* Optional: to prevent repetition */
     position: absolute;
