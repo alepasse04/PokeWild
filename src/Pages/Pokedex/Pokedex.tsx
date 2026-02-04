@@ -17,13 +17,15 @@ import type {Pokemon} from "../../types/pokemons.ts";
 import { fetchPokemons } from "../../API/pokeApi.ts";
 import PokedexScreen from "../SubWiews/PokedexScreen/PokedexScreen.tsx";
 import PokedexDetails from "../SubWiews/PokedexDetails/PokedexDetails.tsx";
+import BattleScreen from "../SubWiews/BattleScreen/BattleScreen.tsx";
 import PokemonSong from "../../assets/souds/PokemonSong.mp3";
+import Pika3 from "../../assets/icons/Pika3.png";
 
 import "./pokedex.css";
 import '../../styles/tabler-icons.min.css'
 
 /** Tipo per le viste disponibili nel Pokédex */
-type View = 'screen' | 'details';
+type View = 'screen' | 'details' | 'battle';
 
 function Pokedex() {
     const navigate = useNavigate();
@@ -32,6 +34,8 @@ function Pokedex() {
     const [current, setCurrent] = useState(4); // Index of the current Pokemon
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentView, setCurrentView] = useState<View>('screen');
+    const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
+    const [confirmAction, setConfirmAction] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     useEffect(() => {
         //fetch available pokemons
@@ -70,17 +74,50 @@ function Pokedex() {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                setCurrent(prev => prev - 1 < 0 ? availablePokemons.length - 1 : prev - 1);
-            } else if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                setCurrent(prev => prev + 1 >= availablePokemons.length ? 0 : prev + 1);
+            if (currentView === 'battle') {
+                // Battle mode controls
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setSelectedMoveIndex(prev => prev > 1 ? prev - 2 : prev);
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setSelectedMoveIndex(prev => prev < 2 ? prev + 2 : prev);
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    setSelectedMoveIndex(prev => prev % 2 === 1 ? prev - 1 : prev);
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    setSelectedMoveIndex(prev => prev % 2 === 0 ? prev + 1 : prev);
+                } else if (e.key === 'Enter' || e.key === 'a' || e.key === 'A') {
+                    e.preventDefault();
+                    setConfirmAction(true);
+                } else if (e.key === 'Escape' || e.key === 'b' || e.key === 'B') {
+                    e.preventDefault();
+                    setCurrentView('screen');
+                    setSelectedMoveIndex(0);
+                }
+            } else {
+                // Normal Pokedex controls
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setCurrent(prev => prev - 1 < 0 ? availablePokemons.length - 1 : prev - 1);
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setCurrent(prev => prev + 1 >= availablePokemons.length ? 0 : prev + 1);
+                } else if (e.key === 'Enter' || e.key === 'a' || e.key === 'A') {
+                    e.preventDefault();
+                    if (currentView === 'screen') {
+                        setCurrentView('battle');
+                    }
+                } else if (e.key === 'Escape' || e.key === 'b' || e.key === 'B') {
+                    e.preventDefault();
+                    setCurrentView('screen');
+                }
             }
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [availablePokemons.length]);
+    }, [availablePokemons.length, currentView]);
 
     return(
         <>
@@ -91,7 +128,7 @@ function Pokedex() {
             <header></header>
 
             <section className="blobs">
-                <a onClick={() => setCurrentView('screen')} target="_blank"><img src="/src/assets/icons/Pika3.png" alt=""/></a>
+                <a onClick={() => setCurrentView('screen')}><img src={Pika3} alt="Pikachu"/></a>
                 <a href="https://github.com/hotheadhacker/no-as-a-service" target="_blank"></a>
                 <a href="https://pokeapi.co/docs/v2" target="_blank"></a>
                 <a href="https://pokecord.org/" target="_blank"></a>
@@ -109,7 +146,20 @@ function Pokedex() {
                             showAnimation ? <div className="animation"></div> :
                             currentView === 'screen'
                                 ? <PokedexScreen pokemons={availablePokemons} current={current} setCurrent={setCurrent} />
-                                : <PokedexDetails pokemons={availablePokemons} current={current} setCurrent={setCurrent} />
+                                : currentView === 'details'
+                                ? <PokedexDetails pokemons={availablePokemons} current={current} setCurrent={setCurrent} />
+                                : currentView === 'battle' && availablePokemons[current]
+                                ? <BattleScreen
+                                    playerPokemon={availablePokemons[current]}
+                                    onBattleEnd={(_won) => {
+                                        setCurrentView('screen');
+                                        setSelectedMoveIndex(0);
+                                    }}
+                                    selectedMoveIndex={selectedMoveIndex}
+                                    onConfirm={confirmAction}
+                                    resetConfirm={() => setConfirmAction(false)}
+                                  />
+                                : <PokedexScreen pokemons={availablePokemons} current={current} setCurrent={setCurrent} />
                         }
                     </div>
                     <section className="decoration">
@@ -119,6 +169,8 @@ function Pokedex() {
                                 className="ti ti-home-2"></i></a>
                             <a onClick={() => setCurrentView('details')} className="search"><i
                                 className="ti ti-search"></i></a>
+                            <a onClick={() => setCurrentView('battle')} className="battle"><i
+                                className="ti ti-swords"></i></a>
                         </div>
                         <div className="vents">
                             <div></div>
@@ -148,17 +200,56 @@ function Pokedex() {
             <footer>
                 <nav>
                     <div>
-                        <a target="_blank"><i className="ti ti-minus"></i></a>
-                        <a ><i className="ti ti-minus"></i></a>
+                        <a onClick={(e) => {
+                            e.preventDefault();
+                            if (currentView === 'battle') {
+                                setSelectedMoveIndex(prev => prev % 2 === 1 ? prev - 1 : prev);
+                            }
+                        }}><i className="ti ti-minus"></i></a>
+                        <a onClick={(e) => {
+                            e.preventDefault();
+                            if (currentView === 'battle') {
+                                setSelectedMoveIndex(prev => prev % 2 === 0 ? prev + 1 : prev);
+                            }
+                        }}><i className="ti ti-minus"></i></a>
                     </div>
                     <div>
-                        <a onClick={(e) => { e.preventDefault(); setCurrent(current - 1 < 0 ? availablePokemons.length - 1 : current - 1); }}><i className="ti ti-minus-vertical"></i></a>
-                        <a onClick={(e) => { e.preventDefault(); setCurrent(current + 1 >= availablePokemons.length ? 0 : current + 1); }}><i className="ti ti-minus-vertical"></i></a>
+                        <a onClick={(e) => {
+                            e.preventDefault();
+                            if (currentView === 'battle') {
+                                setSelectedMoveIndex(prev => prev > 1 ? prev - 2 : prev);
+                            } else {
+                                setCurrent(current - 1 < 0 ? availablePokemons.length - 1 : current - 1);
+                            }
+                        }}><i className="ti ti-minus-vertical"></i></a>
+                        <a onClick={(e) => {
+                            e.preventDefault();
+                            if (currentView === 'battle') {
+                                setSelectedMoveIndex(prev => prev < 2 ? prev + 2 : prev);
+                            } else {
+                                setCurrent(current + 1 >= availablePokemons.length ? 0 : current + 1);
+                            }
+                        }}><i className="ti ti-minus-vertical"></i></a>
                     </div>
                 </nav>
                 <div className="footer-buttons">
-                    <button onClick={() => setCurrentView('details')}>A</button>
-                    <button onClick={() => setCurrentView('screen')}>B</button>
+                    <button onClick={() => {
+                        if (currentView === 'screen') {
+                            setCurrentView('battle');
+                        } else if (currentView === 'battle') {
+                            setConfirmAction(true);
+                        } else {
+                            setCurrentView('details');
+                        }
+                    }}>A</button>
+                    <button onClick={() => {
+                        if (currentView === 'battle') {
+                            setCurrentView('screen');
+                            setSelectedMoveIndex(0);
+                        } else {
+                            setCurrentView('screen');
+                        }
+                    }}>B</button>
                 </div>
             </footer>
             <noscript>Please Enable Javascript To Use The Pokedex!</noscript>

@@ -1,0 +1,271 @@
+
+.battle-screen {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Press Start 2P', 'Pokemon Emerald', monospace;
+    font-size: 3rem;
+}
+
+.battle-screen.loading,
+.battle-screen.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white;
+}
+
+/* Background */
+.battle-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+/* Pokemon containers */
+.battle-opponent,
+.battle-player {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+}
+
+.battle-opponent {
+    top: 5%;
+    right: 5%;
+    flex-direction: row-reverse;
+    gap: 10px;
+}
+
+.battle-player {
+    bottom: 35%;
+    left: 5%;
+    flex-direction: row;
+    gap: 10px;
+}
+
+/* Pokemon sprites */
+.pokemon-sprite {
+    width: 96px;
+    height: 96px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+}
+
+.pokemon-sprite img {
+    width: 80px;
+    height: 80px;
+    image-rendering: pixelated;
+    transition: transform 0.1s ease;
+}
+
+.pokemon-sprite img.shake {
+    animation: shake 0.3s ease-in-out infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.opponent-sprite {
+    transform: scale(1.2);
+}
+
+.player-sprite {
+    transform: scale(1.5) scaleX(-1);
+}
+
+.player-sprite img {
+    transform: scaleX(-1);
+}
+
+/* Pokemon info boxes */
+.pokemon-info {
+    background: linear-gradient(135deg, #f5f5dc, #d4c896);
+    border: 3px solid #333;
+    border-radius: 8px;
+    padding: 8px;
+    min-width: 120px;
+    box-shadow: 2px 2px 0 #333;
+}
+
+.pokemon-name {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+    text-transform: capitalize;
+}
+
+/* HP Bar */
+.hp-bar {
+    height: 100%;
+    transition: width 0.5s ease, background-color 0.3s ease;
+    border-radius: 4px;
+}
+
+.hp-text {
+    display: block;
+    font-size: 0.7rem;
+    color: #555;
+    margin-top: 2px;
+    text-align: right;
+}
+
+/* Battle log */
+.battle-log {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25%;
+    background: linear-gradient(135deg, #f5f5dc, #d4c896);
+    border-top: 4px solid #333;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+}
+
+.battle-log p {
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Move selection */
+.move-selection {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 25%;
+    background: linear-gradient(135deg, #4a90a4, #2d5a6b);
+    border-top: 4px solid #333;
+    border-left: 4px solid #333;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    padding: 5px;
+    z-index: 11;
+}
+
+.move-option {
+    background: #2d5a6b;
+    border: 2px solid #1a3a4a;
+    border-radius: 4px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.move-option.selected {
+    background: #5ab4d4;
+    border-color: #fff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+.move-option:hover {
+    background: #3d7a94;
+}
+
+.move-name {
+    color: white;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.move-power {
+    color: #aad4e4;
+    font-size: 0.6rem;
+    margin-top: 2px;
+}
+
+/* Waiting message */
+.waiting-message {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 25%;
+    background: linear-gradient(135deg, #4a4a4a, #2d2d2d);
+    border-top: 4px solid #333;
+    border-left: 4px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 11;
+}
+
+.waiting-message p {
+    color: #aaa;
+    font-size: 0.8rem;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* HP Bar bigger */
+.hp-bar-container {
+    width: 100%;
+    height: 12px;
+    background: #333;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #222;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .pokemon-info {
+        min-width: 100px;
+        padding: 6px;
+    }
+
+    .pokemon-name {
+        font-size: 0.7rem;
+    }
+
+    .hp-text {
+        font-size: 0.55rem;
+    }
+
+    .battle-log p {
+        font-size: 0.8rem;
+    }
+
+    .move-name {
+        font-size: 0.65rem;
+    }
+
+    .move-power {
+        font-size: 0.5rem;
+    }
+}

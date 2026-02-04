@@ -198,3 +198,103 @@ export const saveFavoritePokemon = async (
     }
 };
 
+
+import type { BattlePokemon, BattleMove } from "../types/pokemons.ts";
+
+/**
+ * Recupera i dati di battaglia per un Pokémon.
+ * Include stats, mosse e sprite front/back.
+ *
+ * @param pokemonId - ID del Pokémon
+ * @param weakenFactor - Fattore per indebolire il Pokémon (default 1.0, usa 0.8 per opponent)
+ * @returns Promise con BattlePokemon
+ */
+export const getBattlePokemon = async (
+    pokemonId: number,
+    weakenFactor: number = 1.0
+): Promise<BattlePokemon> => {
+    const apiUrl = 'https://pokeapi.co/api/v2';
+
+    try {
+        // Fetch Pokemon data
+        const pokemonRes = await fetch(`${apiUrl}/pokemon/${pokemonId}`);
+        if (!pokemonRes.ok) throw new Error(`Failed to fetch Pokemon ${pokemonId}`);
+        const pokemonData = await pokemonRes.json();
+
+        // Extract stats
+        const stats = pokemonData.stats.reduce((acc: Record<string, number>, stat: { base_stat: number; stat: { name: string } }) => {
+            acc[stat.stat.name] = Math.floor(stat.base_stat * weakenFactor);
+            return acc;
+        }, {});
+
+        // Get moves (random 2-4 damaging moves)
+        const allMoves = pokemonData.moves.slice(0, 20);
+        const movesPromises = allMoves
+            .slice(0, 4)
+            .map(async (m: { move: { url: string } }) => {
+                try {
+                    const moveRes = await fetch(m.move.url);
+                    if (!moveRes.ok) return null;
+                    const moveData = await moveRes.json();
+
+                    if (moveData.power && moveData.power > 0) {
+                        return {
+                            name: moveData.name.replace('-', ' '),
+                            power: moveData.power,
+                            type: moveData.type.name,
+                            accuracy: moveData.accuracy || 100
+                        } as BattleMove;
+                    }
+                    return null;
+                } catch {
+                    return null;
+                }
+            });
+
+        const movesResults = await Promise.all(movesPromises);
+        let moves = movesResults.filter((m): m is BattleMove => m !== null);
+
+        if (moves.length < 2) {
+            const defaultMoves: BattleMove[] = [
+                { name: 'tackle', power: 40, type: 'normal', accuracy: 100 },
+                { name: 'scratch', power: 40, type: 'normal', accuracy: 100 }
+            ];
+            moves = [...moves, ...defaultMoves].slice(0, 2);
+        }
+
+        const baseHp = stats['hp'] || 50;
+        const maxHp = Math.floor(baseHp * 2 + 100);
+
+        return {
+            id: pokemonData.id,
+            name: pokemonData.name,
+            image: pokemonData.sprites.front_default,
+            imageBack: pokemonData.sprites.back_default,
+            maxHp: maxHp,
+            currentHp: maxHp,
+            attack: stats['attack'] || 50,
+            defense: stats['defense'] || 50,
+            speed: stats['speed'] || 50,
+            moves: moves.slice(0, 4),
+            types: pokemonData.types.map((t: { type: { name: string } }) => t.type.name)
+        };
+    } catch (error) {
+        console.error('Error fetching battle Pokemon:', error);
+        throw error;
+    }
+};
+
+/**
+ * Ottiene un Pokémon avversario random, leggermente più debole del giocatore.
+ */
+export const getRandomOpponent = async (
+    playerPokemonId: number,
+    maxId: number = 151
+): Promise<BattlePokemon> => {
+    let opponentId: number;
+    do {
+        opponentId = Math.floor(Math.random() * maxId) + 1;
+    } while (opponentId === playerPokemonId);
+
+    return getBattlePokemon(opponentId, 0.8);
+};

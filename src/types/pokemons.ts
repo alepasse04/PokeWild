@@ -28,7 +28,39 @@ export type PokemonTypeName =
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 
 /** Viste disponibili nel Pokédex */
-export type PokedexView = 'screen' | 'details';
+export type PokedexView = 'screen' | 'details' | 'battle';
+
+/** Mossa di un Pokémon per il combattimento */
+export interface BattleMove {
+    name: string;
+    power: number;
+    type: string;
+    accuracy: number;
+}
+
+/** Pokémon in battaglia con stats di combattimento */
+export interface BattlePokemon {
+    id: PokemonId;
+    name: PokemonName;
+    image: SpriteUrl;
+    imageBack?: SpriteUrl;
+    maxHp: number;
+    currentHp: number;
+    attack: number;
+    defense: number;
+    speed: number;
+    moves: BattleMove[];
+    types: string[];
+}
+
+/** Stato del turno di battaglia */
+export type BattleTurn = 'player' | 'opponent' | 'ended';
+
+/** Messaggio di log della battaglia */
+export interface BattleLog {
+    message: string;
+    type: 'attack' | 'damage' | 'info' | 'victory' | 'defeat';
+}
 
 
 

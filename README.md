@@ -89,12 +89,14 @@ L'applicazione recupera i dati dei Pokémon dalla [PokéAPI](https://pokeapi.co/
 
 - **Lista Pokémon** - Visualizza una lista scorrevole di tutti i 721 Pokémon
 - **Dettagli Pokémon** - Mostra informazioni dettagliate: tipo, abilità e descrizione
+- **Sistema di Battaglia** - Combattimento a turni 1v1 contro un Pokémon selvatico
 - **Salva Preferiti** - Possibilità di salvare Pokemon come preferiti (chiamata POST)
 - **Navigazione intuitiva** - Usa il D-pad a schermo o le frecce direzionali della tastiera
 - **Selezione rapida** - Digita l'ID del Pokémon (es. 025 per Pikachu) per saltare direttamente
 - **Musica di sottofondo** - Toggle per riprodurre/stoppare la colonna sonora Pokémon
 - **Animazione di avvio** - Animazione iniziale in stile retrò all'apertura del Pokédex
 - **Pagina 404 divertente** - Pagina di errore con messaggi casuali dall'API "No as a Service"
+- **Design responsive (circa)** - Supporto per desktop, tablet e mobile (portrait e landscape)
 
 ---
 
@@ -132,9 +134,13 @@ src/
 │       │   ├── PokedexScreen.tsx
 │       │   └── pokedexScreen.css
 │       │
-│       └── PokedexDetails/       # Vista dettagli Pokémon
-│           ├── PokedexDetails.tsx # GET descrizione + POST preferiti
-│           └── pokedexDetails.css
+│       ├── PokedexDetails/       # Vista dettagli Pokémon
+│       │   ├── PokedexDetails.tsx # GET descrizione + POST preferiti
+│       │   └── pokedexDetails.css
+│       │
+│       └── BattleScreen/         # Sistema di combattimento
+│           ├── BattleScreen.tsx  # Logica battaglia a turni
+│           └── battleScreen.css
 │
 ├── styles/                       # Stili globali e icone
 │   └── tabler-icons.min.css      # Libreria icone Tabler
@@ -178,6 +184,16 @@ La vista dettagli che mostra:
 - **Abilità** (es. "Static, Lightning Rod")
 - **Descrizione** recuperata dall'API (GET con React Query)
 - **Bottone Preferiti** per salvare il Pokemon (POST con useMutation)
+
+### `BattleScreen.tsx`
+Il sistema di combattimento a turni:
+- **Inizializzazione** - Carica il Pokémon del giocatore e genera un avversario random (leggermente più debole)
+- **Sistema a turni** - Alterna tra turno del giocatore e dell'avversario
+- **Selezione mosse** - 4 mosse disponibili con potenza e precisione
+- **Calcolo danni** - Formula ispirata ai giochi Pokémon originali
+- **Barre HP animate** - Feedback visivo sui danni inflitti
+- **AI avversario** - Sceglie mosse automaticamente
+- **Animazioni** - Effetti shake quando si riceve danno
 
 ---
 
@@ -246,15 +262,27 @@ Il caricamento dei Pokémon è stato ottimizzato per un'esperienza utente fluida
 
 ## Controlli
 
+### Pokédex
 | Azione | Tastiera | Interfaccia |
 |--------|----------|-------------|
 | Pokémon precedente | `↑` Freccia Su | D-pad Su |
 | Pokémon successivo | `↓` Freccia Giù | D-pad Giù |
 | Salta a ID | Digita `001`-`721` | - |
-| Apri dettagli | - | Bottone `A` / `use` |
-| Torna alla lista | - | Bottone `B` |
+| Apri dettagli | - | Bottone `use` / icona 🔍 |
+| Avvia battaglia | `A` o `Enter` | Bottone `A` / icona ⚔️ |
+| Torna alla lista | `B` o `Esc` | Bottone `B` |
 | Toggle musica | - | Icona Music |
 | Salva preferito | - | Bottone ⭐ (in Details) |
+
+### Battaglia
+| Azione | Tastiera | Interfaccia |
+|--------|----------|-------------|
+| Seleziona mossa su | `↑` Freccia Su | D-pad Su    |
+| Seleziona mossa giù | `↓` Freccia Giù | D-pad Già   |
+| Seleziona mossa sx | `←` Freccia Sinistra | D-pad Sx    |
+| Seleziona mossa dx | `→` Freccia Destra | D-pad Dx    |
+| Conferma mossa | `A` o `Enter` | Bottone `A` |
+| Esci dalla battaglia | `B` o `Esc` | Bottone `B` |
 
 ---
 
